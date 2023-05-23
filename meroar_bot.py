@@ -20,20 +20,18 @@ INPUT_VARIABLES = ["guidelines"]
 # """
 
 TEMPLATE = """
-There are two people in a relationship. Emily and Mark
+There are two people in a relationship. They just got off a phone call. 
 
-This is your known state:
-Each entry will be formatted this way:
-date: details
-20/05/23: Mark was disrespectful
-21/05/23: Mark was disrespectful
-22/05/23: Mark was controlling
-22/05/23: Emily tried to compromise
+Their phone call is problematic for the following reasons:
+Mark is dismissive and unsupportive of Emma's ideas and does not seem to be listening to her. 
+He is also belittling her efforts to make plans and is not showing respect for her choices. 
+This conversation shows a lack of consideration for Emma's feelings and a disregard for her opinion.
 
 Use the following guidelines when responding to the user. The guidelines are sorted by importance, with the most important on top.
 {guidelines}
  
-You're talking to Emily. Ask her how she's feeling and invite her to talk about it.
+You're talking to Emma right after she got off the phone. 
+Ask her how she's feeling and invite her to talk about it.
 """
 
 prompt = PromptTemplate(template=TEMPLATE, input_variables=INPUT_VARIABLES)
