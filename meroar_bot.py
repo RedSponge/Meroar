@@ -6,7 +6,7 @@ from langchain.memory import ConversationBufferMemory
 import constants
 import guidelines
 
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "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"
 
 INPUT_VARIABLES = ["guidelines"]
 # TEMPLATE = """
@@ -34,6 +34,7 @@ You're talking to Emma right after she got off the phone.
 Ask her how she's feeling and invite her to talk about it.
 """
 
+print("Guidelines:", guidelines.GUIDELINES)
 prompt = PromptTemplate(template=TEMPLATE, input_variables=INPUT_VARIABLES)
 
 memory = ConversationBufferMemory(memory_key="chat_history")
