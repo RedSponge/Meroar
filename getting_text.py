@@ -4,11 +4,10 @@ from langchain.llms import OpenAI
 from langchain.memory import ConversationBufferMemory
 
 import constants
-import guidelines
 
 OPENAI_API_KEY = "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"
 
-INPUT_VARIABLES = ["guidelines"]
+INPUT_VARIABLES = ["conversation"]
 # TEMPLATE = """
 # This is a conversation over the phone between two participants.
 # {conversation}
@@ -20,19 +19,26 @@ INPUT_VARIABLES = ["guidelines"]
 # """
 
 TEMPLATE = """
-There are two people in a relationship. They just got off a phone call. 
+There are two people in a relationship.
+This is a conversation between them:
 
-Their phone call is problematic for the following reasons:
-Mark is dismissive and unsupportive of Emma's ideas and does not seem to be listening to her. 
-He is also belittling her efforts to make plans and is not showing respect for her choices. 
-This conversation shows a lack of consideration for Emma's feelings and a disregard for her opinion.
+{conversation}
 
-Use the following guidelines when responding to the user. The guidelines are sorted by importance, with the most important on top.
-{guidelines}
- 
-You're talking to Emma right after she got off the phone. 
-Ask her how she's feeling and invite her to talk about it.
+If the conversation doesn't contain any unhealthy behaviour, the word "OK" will appear. 
+
+Otherwise, if the conversation has problematic or abusive connotations, the word "BAD" and the following information will appear:
+1. An indifferent summary of the conversation explaining what happened, devoid of any advise, opinion or help.
+2. An explanation why this conversation is not good, using details that are based on the conversation context
+
+you are not allowed to give any advice
+
 """
+# """
+# If you find this conversation as problematic or toxic, you are not allowed to give any advice.
+# you are only allowed to give a summary of this conversation without expressing any advise/opinion/help.
+# explain what happen in their conversation and way it is problematic using details of the situation from indifferent point of view.
+# otherwise, return a just the word "OK", without any explanation.
+# """
 
 prompt = PromptTemplate(template=TEMPLATE, input_variables=INPUT_VARIABLES)
 
@@ -40,7 +46,7 @@ memory = ConversationBufferMemory(memory_key="chat_history")
 llm = OpenAI(openai_api_key=OPENAI_API_KEY)
 
 agent = initialize_agent([], llm, agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory)
-agent.run(input=prompt.format(guidelines=guidelines.GUIDELINES))
+agent.run(input=prompt.format(conversation=constants.BAD_CONVERSATION))
 responses = [
     ""
 ]
