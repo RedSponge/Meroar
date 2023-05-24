@@ -1,31 +1,26 @@
+from bisect import insort_right
 from langchain import PromptTemplate
 from langchain.agents import initialize_agent, AgentType
 from langchain.llms import OpenAI
 from langchain.memory import ConversationBufferMemory
 
 import constants
+from getting_text import get_insight_from_conversation
 import guidelines
 
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "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"
 
-INPUT_VARIABLES = ["guidelines"]
-# TEMPLATE = """
-# This is a conversation over the phone between two participants.
-# {conversation}
-#
-# You know the following things:
-# Jason regularly exerts this kind of behaviour
-#
-# Explain the role of each participant in the conversation, and determine whether this relationship is unhealthy
-# """
+problems = """Mark is dismissive and unsupportive of Emma's ideas and does not seem to be listening to her. 
+He is also belittling her efforts to make plans and is not showing respect for her choices. 
+This conversation shows a lack of consideration for Emma's feelings and a disregard for her opinion."""
+
+INPUT_VARIABLES = ["guidelines", "problems"]
 
 TEMPLATE = """
 There are two people in a relationship. They just got off a phone call. 
 
-Their phone call is problematic for the following reasons:
-Mark is dismissive and unsupportive of Emma's ideas and does not seem to be listening to her. 
-He is also belittling her efforts to make plans and is not showing respect for her choices. 
-This conversation shows a lack of consideration for Emma's feelings and a disregard for her opinion.
+This is the summary of their latest conversation:
+{problems}
 
 Use the following guidelines when responding to the user. The guidelines are sorted by importance, with the most important on top.
 {guidelines}
@@ -40,11 +35,15 @@ prompt = PromptTemplate(template=TEMPLATE, input_variables=INPUT_VARIABLES)
 memory = ConversationBufferMemory(memory_key="chat_history")
 llm = OpenAI(openai_api_key=OPENAI_API_KEY)
 
-agent = initialize_agent([], llm, agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory)
-agent.run(input=prompt.format(guidelines=guidelines.GUIDELINES))
-responses = [
-    ""
-]
-while True:
-    agent.run(input=f'Human: {input("Enter your response: ")}')
-# print(llm(prompt.format(conversation=constants.DUMMY_CONVERSATION, guidelines=guidelines.GUIDELINES)))
+conversation = constants.BAD_CONVERSATION_2
+insight = get_insight_from_conversation(conversation).strip()
+print(insight)
+if insight.startswith("Yes"):
+    problems = insight.split('Summary:')[1]
+
+    agent = initialize_agent([], llm, agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory)
+    agent.run(input=prompt.format(guidelines=guidelines.GUIDELINES, problems=problems))
+    while True:
+        agent.run(input=f'Human: {input("Enter your response: ")}')
+else:
+    print("This conversation looks good!")

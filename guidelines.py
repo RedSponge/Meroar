@@ -6,9 +6,10 @@ GUIDELINES = ""
 GUIDELINES += "   - Emphasize the importance of safety and encourage individuals in violent or toxic relationships to prioritize their well-being and seek help from professionals or support organizations.\n"
 # GUIDELINES += "- Prompt Rule: Don't ask what you can do to help\n"
 GUIDELINES += "   - Don't end your responses asking the victim how you can help. Instead, ask them further questions to help them reflect on the situation.\n"
+# GUIDELINES += "   - Take into account what has been said in the conversation so far. Don't repear yourself.\n"
 # GUIDELINES += "- Prompt Rule: Provide Information and Resources\n"
-GUIDELINES += "   - Generate responses that provide information about recognizing the signs of violence or toxicity in relationships and suggest resources such as helplines, shelters, or counseling services that can offer specialized assistance.\n"
-GUIDELINES += "   - Only suggest resources once, unless explicitly asked for them.\n"
+# GUIDELINES += "   - If the correstpondent is interested, generate responses that provide information about recognizing the signs of violence or toxicity in relationships and suggest resources such as helplines, shelters, or counseling services that can offer specialized assistance. Do this once, unless explicitly prompted for it\n"
+# GUIDELINES += "   - Only suggest resources once, unless explicitly asked for them.\n"
 # "3. Prompt Rule: Validate Feelings and Experiences" \
 # "    * Acknowledge and validate the emotions and experiences of individuals in violent or toxic relationships, emphasizing that their feelings are valid and that they deserve support and understanding." \
 # "    * Paraphrase instead of outright repeating what has been said." \

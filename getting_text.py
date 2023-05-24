@@ -1,3 +1,4 @@
+from webbrowser import get
 from langchain import PromptTemplate
 from langchain.agents import initialize_agent, AgentType
 from langchain.llms import OpenAI
@@ -5,7 +6,7 @@ from langchain.memory import ConversationBufferMemory
 
 import constants
 
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "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"
 
 INPUT_VARIABLES = ["conversation"]
 # TEMPLATE = """
@@ -19,20 +20,21 @@ INPUT_VARIABLES = ["conversation"]
 # """
 
 TEMPLATE = """
-There are two people in a relationship.
-This is a conversation between them:
+I want you to perform a data annotation task. In your output, I want you to return
+either yes or no, depending on whether you think the following conversation is alarming.
+A conversation is alarming if your perceive it alludes to an unhealthy relationship between the participants with Emma as the victim.
+I want you to respond with yes or no in the first line and explain your assesment in the second line. The word "Summary:" and a summary of the conversation in the third line.
 
 {conversation}
-
-If the conversation doesn't contain any unhealthy behaviour, the word "OK" will appear. 
-
-Otherwise, if the conversation has problematic or abusive connotations, the word "BAD" and the following information will appear:
-1. An indifferent summary of the conversation explaining what happened, devoid of any advise, opinion or help.
-2. An explanation why this conversation is not good, using details that are based on the conversation context
-
-you are not allowed to give any advice
-
 """
+
+# """
+# You are about to recevie a conversation between two people. Emma and Mark, they are in a relationship.
+# After reading the conversation, if you find the conversation toxic or problematic in any way, write description of the talk of what they talked about, only if the conversation is bad but do.
+# if you do not find this conversation problematic, you need to respond only with the word 'OK'
+
+# {conversation}
+# """
 # """
 # If you find this conversation as problematic or toxic, you are not allowed to give any advice.
 # you are only allowed to give a summary of this conversation without expressing any advise/opinion/help.
@@ -41,15 +43,10 @@ you are not allowed to give any advice
 # """
 
 prompt = PromptTemplate(template=TEMPLATE, input_variables=INPUT_VARIABLES)
-
-memory = ConversationBufferMemory(memory_key="chat_history")
 llm = OpenAI(openai_api_key=OPENAI_API_KEY)
 
-agent = initialize_agent([], llm, agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory)
-agent.run(input=prompt.format(conversation=constants.BAD_CONVERSATION))
-responses = [
-    ""
-]
-while True:
-    agent.run(input=f'Human: {input("Enter your response: ")}')
-# print(llm(prompt.format(conversation=constants.DUMMY_CONVERSATION, guidelines=guidelines.GUIDELINES)))
+def get_insight_from_conversation(conversation: str):
+    return llm(prompt.format(conversation=conversation))
+
+if __name__ == "__main__":
+    print(get_insight_from_conversation(constants.BAD_CONVERSATION_2))
